@@ -141,6 +141,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>le_name</tabstop>
+  <tabstop>le_address</tabstop>
+  <tabstop>tv_product</tabstop>
+  <tabstop>tv_orderproducts</tabstop>
+  <tabstop>p_add</tabstop>
+  <tabstop>pb_remove</tabstop>
+  <tabstop>sb_quantity</tabstop>
+  <tabstop>pb_ok</tabstop>
+  <tabstop>pb_cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

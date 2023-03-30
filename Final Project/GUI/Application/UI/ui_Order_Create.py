@@ -126,6 +126,14 @@ class Ui_Create_Order_Form(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_4)
 
+        QWidget.setTabOrder(self.le_name, self.le_address)
+        QWidget.setTabOrder(self.le_address, self.tv_product)
+        QWidget.setTabOrder(self.tv_product, self.tv_orderproducts)
+        QWidget.setTabOrder(self.tv_orderproducts, self.p_add)
+        QWidget.setTabOrder(self.p_add, self.pb_remove)
+        QWidget.setTabOrder(self.pb_remove, self.sb_quantity)
+        QWidget.setTabOrder(self.sb_quantity, self.pb_ok)
+        QWidget.setTabOrder(self.pb_ok, self.pb_cancel)
 
         self.retranslateUi(Create_Order_Form)
 

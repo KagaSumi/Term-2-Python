@@ -39,7 +39,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -376,6 +376,24 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>Main_ui</tabstop>
+  <tabstop>cb_out_of_stock</tabstop>
+  <tabstop>tv_product_list</tabstop>
+  <tabstop>pb_create</tabstop>
+  <tabstop>pb_delete</tabstop>
+  <tabstop>pb_update</tabstop>
+  <tabstop>pb_order_create</tabstop>
+  <tabstop>pb_order_update</tabstop>
+  <tabstop>pb_order_delete</tabstop>
+  <tabstop>pb_order_process</tabstop>
+  <tabstop>le_order_filter</tabstop>
+  <tabstop>rb_order_no_filter</tabstop>
+  <tabstop>rb_order_unprocessed</tabstop>
+  <tabstop>rb_order_processed</tabstop>
+  <tabstop>tv_order_view</tabstop>
+  <tabstop>tv_order_items</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

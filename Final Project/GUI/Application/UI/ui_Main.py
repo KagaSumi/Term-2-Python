@@ -263,6 +263,21 @@ class Ui_Main(object):
         self.menuAbout.setObjectName(u"menuAbout")
         self.menuAbout.setEnabled(True)
         Main.setMenuBar(self.menubar)
+        QWidget.setTabOrder(self.Main_ui, self.cb_out_of_stock)
+        QWidget.setTabOrder(self.cb_out_of_stock, self.tv_product_list)
+        QWidget.setTabOrder(self.tv_product_list, self.pb_create)
+        QWidget.setTabOrder(self.pb_create, self.pb_delete)
+        QWidget.setTabOrder(self.pb_delete, self.pb_update)
+        QWidget.setTabOrder(self.pb_update, self.pb_order_create)
+        QWidget.setTabOrder(self.pb_order_create, self.pb_order_update)
+        QWidget.setTabOrder(self.pb_order_update, self.pb_order_delete)
+        QWidget.setTabOrder(self.pb_order_delete, self.pb_order_process)
+        QWidget.setTabOrder(self.pb_order_process, self.le_order_filter)
+        QWidget.setTabOrder(self.le_order_filter, self.rb_order_no_filter)
+        QWidget.setTabOrder(self.rb_order_no_filter, self.rb_order_unprocessed)
+        QWidget.setTabOrder(self.rb_order_unprocessed, self.rb_order_processed)
+        QWidget.setTabOrder(self.rb_order_processed, self.tv_order_view)
+        QWidget.setTabOrder(self.tv_order_view, self.tv_order_items)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.actionExit)
@@ -273,7 +288,7 @@ class Ui_Main(object):
 
         self.retranslateUi(Main)
 
-        self.Main_ui.setCurrentIndex(0)
+        self.Main_ui.setCurrentIndex(1)
         self.pb_create.setDefault(False)
 
 

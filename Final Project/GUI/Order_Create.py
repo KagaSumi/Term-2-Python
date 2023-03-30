@@ -7,7 +7,8 @@ from Application.UI.ui_Order_Create import Ui_Create_Order_Form
 from Alert import Alert
 URL = "http://127.0.0.1:5000/api/"
 
-class Form(qtw.QWidget, Ui_Create_Order_Form):
+class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
+    finished = qtc.Signal()
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -45,7 +46,6 @@ class Form(qtw.QWidget, Ui_Create_Order_Form):
             table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
         else:
             table.setModel(None)
-        print(content)
             
     
     def fetch_product_table(self):
@@ -119,9 +119,11 @@ class Form(qtw.QWidget, Ui_Create_Order_Form):
         if self.le_name.text():
             self.output["name"] = self.le_name.text()
             self.output["address"] = self.le_address.text()
-            print(self.output)
+            requests.post(f"{URL}/order", json=self.output)
+            self.finished.emit()
+            self.close()
         else:
-            self.raise_alert("Please enter a name")
+            self.raise_alert("Please enter a Name")
 
     @qtc.Slot()
     def process_add(self,product ,quantity):
@@ -130,7 +132,7 @@ class Form(qtw.QWidget, Ui_Create_Order_Form):
             if cart_product["name"] == product:
                 is_in_cart = True
         if not is_in_cart:
-            self.output["products"].append({"name": product,"quantity": quantity})
+            self.output["products"].append({"name": product.lower(),"quantity": quantity})
         else:
             for cart_product in self.output["products"]:
                 if cart_product["name"] == product:
@@ -139,12 +141,11 @@ class Form(qtw.QWidget, Ui_Create_Order_Form):
 
     @qtc.Slot()
     def process_remove(self):
-        print(self.selected_cart)
         self.output["products"] = [product for product in self.output["products"] if product["name"] != self.selected_cart]
         self.update_cart()
 
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
-    window = Form()    
+    window = Order_Create_Form()    
     window.show()
     sys.exit(app.exec())

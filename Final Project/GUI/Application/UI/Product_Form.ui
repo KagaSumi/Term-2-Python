@@ -115,6 +115,8 @@
  </widget>
  <tabstops>
   <tabstop>le_1</tabstop>
+  <tabstop>sb_quantity</tabstop>
+  <tabstop>sb_price</tabstop>
   <tabstop>pb_ok</tabstop>
   <tabstop>pb_cancel</tabstop>
  </tabstops>

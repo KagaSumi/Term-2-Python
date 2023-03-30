@@ -91,7 +91,9 @@ class Ui_W_Product_Form(object):
 
         self.gridLayout.addWidget(self.gb, 1, 0, 1, 2)
 
-        QWidget.setTabOrder(self.le_1, self.pb_ok)
+        QWidget.setTabOrder(self.le_1, self.sb_quantity)
+        QWidget.setTabOrder(self.sb_quantity, self.sb_price)
+        QWidget.setTabOrder(self.sb_price, self.pb_ok)
         QWidget.setTabOrder(self.pb_ok, self.pb_cancel)
 
         self.retranslateUi(W_Product_Form)

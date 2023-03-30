@@ -5,7 +5,7 @@ from PySide6 import QtGui as qtg
 
 from Application.UI.ui_Main import Ui_Main
 from Product_Form import Form
-URL = "http://127.0.0.1:5000/api/"  
+URL = "http://127.0.0.1:5000/api/"
 
 class Main(qtw.QMainWindow, Ui_Main):
     def __init__(self):
@@ -19,16 +19,6 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.cb_out_of_stock.clicked.connect(self.fetch_product_table)
         self.fetch_product_table()
 
-    def product_changed(self,selected):
-        try:
-            row = selected.indexes()[0].row()
-            self.selected_product = self.tv_product_list.model().index(row, 0).data().lower()
-            self.pb_delete.setEnabled(True)
-            self.pb_update.setEnabled(True)
-        except IndexError:
-            self.selected_product = None
-            self.pb_delete.setDisabled(True)
-            self.pb_update.setDisabled(True)
             
     def fetch_product_table(self):
         # Goal of this function is to update the product_table in case there are new values.
@@ -58,6 +48,27 @@ class Main(qtw.QMainWindow, Ui_Main):
         table.setEditTriggers(qtw.QAbstractItemView.NoEditTriggers)
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
 
+    def product_changed(self,selected):
+        try:
+            row = selected.indexes()[0].row()
+            self.selected_product = self.tv_product_list.model().index(row, 0).data().lower()
+            self.pb_delete.setEnabled(True)
+            self.pb_update.setEnabled(True)
+        except IndexError:
+            self.selected_product = None
+            self.pb_delete.setDisabled(True)
+            self.pb_update.setDisabled(True)
+
+    def fetch_order_table(self):
+        pass
+    def order_changed(self,selected):
+        pass
+    
+    def fetch_order_product_table(self):
+        pass
+# ----------------------------------------------------------------
+# ----------------- Button Functionality--------------------------
+# ----------------------------------------------------------------
     @qtc.Slot()
     def process_form(self, passed = None):
         if passed:
@@ -73,7 +84,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         requests.delete(delete_url)
         self.selected_product=None
         self. fetch_product_table()
-        
+
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     main_window = Main()

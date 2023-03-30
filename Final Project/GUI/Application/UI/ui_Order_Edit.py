@@ -39,21 +39,22 @@ class Ui_Edit_Order_Form(object):
 
         self.horizontalLayout_13.addWidget(self.label_10)
 
-        self.le_name_4 = QLineEdit(Edit_Order_Form)
-        self.le_name_4.setObjectName(u"le_name_4")
-        self.le_name_4.setEnabled(True)
+        self.le_name = QLineEdit(Edit_Order_Form)
+        self.le_name.setObjectName(u"le_name")
+        self.le_name.setEnabled(False)
 
-        self.horizontalLayout_13.addWidget(self.le_name_4)
+        self.horizontalLayout_13.addWidget(self.le_name)
 
         self.label_11 = QLabel(Edit_Order_Form)
         self.label_11.setObjectName(u"label_11")
 
         self.horizontalLayout_13.addWidget(self.label_11)
 
-        self.le_address_4 = QLineEdit(Edit_Order_Form)
-        self.le_address_4.setObjectName(u"le_address_4")
+        self.le_address = QLineEdit(Edit_Order_Form)
+        self.le_address.setObjectName(u"le_address")
+        self.le_address.setEnabled(False)
 
-        self.horizontalLayout_13.addWidget(self.le_address_4)
+        self.horizontalLayout_13.addWidget(self.le_address)
 
 
         self.horizontalLayout_17.addLayout(self.horizontalLayout_13)
@@ -63,10 +64,10 @@ class Ui_Edit_Order_Form(object):
 
         self.horizontalLayout_15 = QHBoxLayout()
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
-        self.tv_product_4 = QTableView(Edit_Order_Form)
-        self.tv_product_4.setObjectName(u"tv_product_4")
+        self.tv_product = QTableView(Edit_Order_Form)
+        self.tv_product.setObjectName(u"tv_product")
 
-        self.horizontalLayout_15.addWidget(self.tv_product_4)
+        self.horizontalLayout_15.addWidget(self.tv_product)
 
         self.verticalLayout_5 = QVBoxLayout()
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -80,23 +81,26 @@ class Ui_Edit_Order_Form(object):
 
         self.horizontalLayout_16.addWidget(self.label_12)
 
-        self.sb_quantity_4 = QSpinBox(Edit_Order_Form)
-        self.sb_quantity_4.setObjectName(u"sb_quantity_4")
+        self.sb_quantity = QSpinBox(Edit_Order_Form)
+        self.sb_quantity.setObjectName(u"sb_quantity")
+        self.sb_quantity.setMaximum(999999999)
 
-        self.horizontalLayout_16.addWidget(self.sb_quantity_4)
+        self.horizontalLayout_16.addWidget(self.sb_quantity)
 
-        self.p_add_4 = QPushButton(Edit_Order_Form)
-        self.p_add_4.setObjectName(u"p_add_4")
+        self.pb_update = QPushButton(Edit_Order_Form)
+        self.pb_update.setObjectName(u"pb_update")
+        self.pb_update.setEnabled(False)
 
-        self.horizontalLayout_16.addWidget(self.p_add_4)
+        self.horizontalLayout_16.addWidget(self.pb_update)
 
 
         self.verticalLayout_5.addLayout(self.horizontalLayout_16)
 
-        self.pb_remove_4 = QPushButton(Edit_Order_Form)
-        self.pb_remove_4.setObjectName(u"pb_remove_4")
+        self.pb_remove = QPushButton(Edit_Order_Form)
+        self.pb_remove.setObjectName(u"pb_remove")
+        self.pb_remove.setEnabled(False)
 
-        self.verticalLayout_5.addWidget(self.pb_remove_4)
+        self.verticalLayout_5.addWidget(self.pb_remove)
 
 
         self.horizontalLayout_15.addLayout(self.verticalLayout_5)
@@ -128,6 +132,13 @@ class Ui_Edit_Order_Form(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_18)
 
+        QWidget.setTabOrder(self.le_name, self.le_address)
+        QWidget.setTabOrder(self.le_address, self.tv_product)
+        QWidget.setTabOrder(self.tv_product, self.sb_quantity)
+        QWidget.setTabOrder(self.sb_quantity, self.pb_update)
+        QWidget.setTabOrder(self.pb_update, self.pb_remove)
+        QWidget.setTabOrder(self.pb_remove, self.pb_ok)
+        QWidget.setTabOrder(self.pb_ok, self.pb_cancel)
 
         self.retranslateUi(Edit_Order_Form)
 
@@ -139,8 +150,8 @@ class Ui_Edit_Order_Form(object):
         self.label_10.setText(QCoreApplication.translate("Edit_Order_Form", u"Name", None))
         self.label_11.setText(QCoreApplication.translate("Edit_Order_Form", u"Address", None))
         self.label_12.setText(QCoreApplication.translate("Edit_Order_Form", u"Quantity", None))
-        self.p_add_4.setText(QCoreApplication.translate("Edit_Order_Form", u"Update", None))
-        self.pb_remove_4.setText(QCoreApplication.translate("Edit_Order_Form", u"Remove", None))
+        self.pb_update.setText(QCoreApplication.translate("Edit_Order_Form", u"Update", None))
+        self.pb_remove.setText(QCoreApplication.translate("Edit_Order_Form", u"Remove", None))
         self.pb_ok.setText(QCoreApplication.translate("Edit_Order_Form", u"Ok", None))
         self.pb_cancel.setText(QCoreApplication.translate("Edit_Order_Form", u"Cancel", None))
     # retranslateUi

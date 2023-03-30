@@ -98,6 +98,7 @@ class Ui_Main(object):
 
         self.pb_delete = QPushButton(self.tab)
         self.pb_delete.setObjectName(u"pb_delete")
+        self.pb_delete.setEnabled(False)
 
         self.verticalLayout_3.addWidget(self.pb_delete)
 
@@ -148,17 +149,6 @@ class Ui_Main(object):
 
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.pb_order_create = QPushButton(self.tab_2)
-        self.pb_order_create.setObjectName(u"pb_order_create")
-
-        self.gridLayout_3.addWidget(self.pb_order_create, 0, 0, 1, 2)
-
-        self.pb_order_update = QPushButton(self.tab_2)
-        self.pb_order_update.setObjectName(u"pb_order_update")
-        self.pb_order_update.setEnabled(False)
-
-        self.gridLayout_3.addWidget(self.pb_order_update, 1, 0, 1, 2)
-
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.horizontalLayout = QHBoxLayout()
@@ -183,13 +173,30 @@ class Ui_Main(object):
         self.verticalLayout_7.addLayout(self.horizontalLayout)
 
 
-        self.gridLayout_3.addLayout(self.verticalLayout_7, 3, 0, 1, 1)
+        self.gridLayout_3.addLayout(self.verticalLayout_7, 4, 0, 1, 1)
 
         self.pb_order_delete = QPushButton(self.tab_2)
         self.pb_order_delete.setObjectName(u"pb_order_delete")
         self.pb_order_delete.setEnabled(False)
 
         self.gridLayout_3.addWidget(self.pb_order_delete, 2, 0, 1, 2)
+
+        self.pb_order_update = QPushButton(self.tab_2)
+        self.pb_order_update.setObjectName(u"pb_order_update")
+        self.pb_order_update.setEnabled(False)
+
+        self.gridLayout_3.addWidget(self.pb_order_update, 1, 0, 1, 2)
+
+        self.pb_order_create = QPushButton(self.tab_2)
+        self.pb_order_create.setObjectName(u"pb_order_create")
+
+        self.gridLayout_3.addWidget(self.pb_order_create, 0, 0, 1, 2)
+
+        self.pb_order_process = QPushButton(self.tab_2)
+        self.pb_order_process.setObjectName(u"pb_order_process")
+        self.pb_order_process.setEnabled(False)
+
+        self.gridLayout_3.addWidget(self.pb_order_process, 3, 0, 1, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout_3, 0, 0, 1, 1)
@@ -266,7 +273,7 @@ class Ui_Main(object):
 
         self.retranslateUi(Main)
 
-        self.Main_ui.setCurrentIndex(1)
+        self.Main_ui.setCurrentIndex(0)
         self.pb_create.setDefault(False)
 
 
@@ -291,10 +298,11 @@ class Ui_Main(object):
         self.rb_order_no_filter.setText(QCoreApplication.translate("Main", u"No Filter", None))
         self.rb_order_unprocessed.setText(QCoreApplication.translate("Main", u"Unprocessed", None))
         self.rb_order_processed.setText(QCoreApplication.translate("Main", u"Processed", None))
-        self.pb_order_create.setText(QCoreApplication.translate("Main", u"Create", None))
-        self.pb_order_update.setText(QCoreApplication.translate("Main", u"Update", None))
         self.label_4.setText(QCoreApplication.translate("Main", u"Filter By Name:", None))
         self.pb_order_delete.setText(QCoreApplication.translate("Main", u"Delete", None))
+        self.pb_order_update.setText(QCoreApplication.translate("Main", u"Update", None))
+        self.pb_order_create.setText(QCoreApplication.translate("Main", u"Create", None))
+        self.pb_order_process.setText(QCoreApplication.translate("Main", u"Process", None))
         self.label.setText(QCoreApplication.translate("Main", u"Orders", None))
         self.label_3.setText(QCoreApplication.translate("Main", u"Order's Item", None))
         self.Main_ui.setTabText(self.Main_ui.indexOf(self.tab_2), QCoreApplication.translate("Main", u"Orders", None))

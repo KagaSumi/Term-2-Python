@@ -213,6 +213,21 @@ def api_process_order(order_id):
         db.session.commit()
     return jsonify(order.to_dict())
 
+@app.route("/api/order/<int:order_id>", methods=["PUT"])
+def update_order(order_id):
+    """Updates an order with a new set of products.
+
+    Args:
+        order_id (int): order id to find
+
+    Returns:
+        Response: A Json object representing the new order.
+    """    
+    data = request.json
+    order = db.session.get(Order, order_id)
+    order.products = data["products"]
+    db.session.commit()
+    return jsonify(order.to_dict())
 
 if __name__ == "__main__":
     app.run(debug=True)

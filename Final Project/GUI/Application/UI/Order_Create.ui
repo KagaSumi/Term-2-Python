@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>create_order_form</class>
- <widget class="QWidget" name="create_order_form">
+ <class>Create_Order_Form</class>
+ <widget class="QWidget" name="Create_Order_Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>730</width>
+    <height>504</height>
    </rect>
   </property>
   <property name="font">
@@ -17,7 +17,10 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Create Order</string>
+   <string notr="true">Create Order</string>
+  </property>
+  <property name="toolTip">
+   <string/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -53,6 +56,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QPushButton" name="p_add">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Add</string>
          </property>
@@ -60,6 +66,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="pb_remove">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Remove</string>
          </property>
@@ -84,7 +93,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="sb_quantity"/>
+          <widget class="QSpinBox" name="sb_quantity">
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

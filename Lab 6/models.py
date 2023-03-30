@@ -49,7 +49,7 @@ class Order(db.Model):
     address = db.Column(db.String)
     completed = db.Column(db.Boolean, default=False, nullable=False)
     products = db.relationship('ProductsOrder', back_populates='order')
-
+    
     def to_dict(self):
         new_dict = {}
         total = 0

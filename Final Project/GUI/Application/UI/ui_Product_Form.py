@@ -77,15 +77,16 @@ class Ui_W_Product_Form(object):
 
         self.sb_price = QDoubleSpinBox(self.gb)
         self.sb_price.setObjectName(u"sb_price")
+        self.sb_price.setMinimum(0.010000000000000)
         self.sb_price.setMaximum(999999999999999.000000000000000)
 
         self.formLayout.setWidget(4, QFormLayout.FieldRole, self.sb_price)
 
-        self.spinBox = QSpinBox(self.gb)
-        self.spinBox.setObjectName(u"spinBox")
-        self.spinBox.setMaximum(999999999)
+        self.sb_quantity = QSpinBox(self.gb)
+        self.sb_quantity.setObjectName(u"sb_quantity")
+        self.sb_quantity.setMaximum(999999999)
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.spinBox)
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.sb_quantity)
 
 
         self.gridLayout.addWidget(self.gb, 1, 0, 1, 2)

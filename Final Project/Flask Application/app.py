@@ -33,6 +33,18 @@ def api_get_product(name):
     return jsonify(product_json)
 
 
+@app.route("/api/product", methods=["GET"])
+def api_get_product_list():
+    """Returns the user all the product.
+    Returns:
+        Response : A response of the outcome of the get operation
+    """    
+    output = []
+    for product in Product.query.all():
+        product_json = product.to_dict()
+        output.append(product_json)
+    return output
+
 @app.route("/api/product/<string:name>", methods=["DELETE"])
 def api_delete_product(name):
     """Deletes a product from the database
@@ -145,6 +157,17 @@ def api_get_order(order_id):
     order = order.to_dict()
     return jsonify(order)
 
+@app.route("/api/order", methods=["GET"])
+def api_get_order_list():
+    """Returns the user all the orders.
+    Returns:
+        Response : A response of the outcome of the get operation
+    """    
+    output = []
+    for Order in Order.query.all():
+        Order_Json = Order.to_dict()
+        output.append(Order)
+    return output
 
 @app.route('/api/order', methods=['POST'])
 def api_create_order():

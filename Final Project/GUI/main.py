@@ -72,11 +72,12 @@ class Main(qtw.QMainWindow, Ui_Main):
         content = self.order_list
         table = self.tv_order_view
         if self.order_process_sort == True:
-            content = [order for order in content if order["completed"]]
+            content = sorted([order for order in content if order["completed"]], key=lambda x: (x["time_processed"], x["time_created"]))
         elif self.order_process_sort == False:
-            content = [order for order in content if not order["completed"]]
+            content = sorted([order for order in content if not order["completed"]], key=lambda x: x["time_created"])
         if self.le_order_filter.text():
             content = [order for order in content if self.le_order_filter.text().lower() in order["customer_name"].lower()]
+        
         model = qtg.QStandardItemModel()
         model.setColumnCount(5)
         model.setHorizontalHeaderLabels(['Order_id', 'Name', 'Address','Time Created', 'Time Processed'])
@@ -128,10 +129,9 @@ class Main(qtw.QMainWindow, Ui_Main):
                     quantity = qtg.QStandardItem(str(row_data['quantity']))
                     model.setItem(row_num, 0, name)
                     model.setItem(row_num,1, quantity)
-
                 table.setModel(model)
                 table.resizeColumnsToContents()
-            
+
     def update_order_table(self):
         self.order_list = json.loads(requests.get(URL + "/order").text)
         self.fetch_order_table()
@@ -165,6 +165,9 @@ class Main(qtw.QMainWindow, Ui_Main):
     def process_delete_order(self):
         requests.delete(URL + "/order/" + str(self.selected_order_id))
         self.selected_product=None
+        self.pb_order_delete.setDisabled(True)
+        self.pb_order_process.setDisabled(True)
+        self.pb_order_update.setDisabled(True)
         self.update_order_table()
         self.tv_order_items.setModel(None)
 

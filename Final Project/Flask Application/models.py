@@ -49,7 +49,7 @@ class Order(db.Model):
     name = db.Column(db.String)
     address = db.Column(db.String)
     completed = db.Column(db.Boolean, default=False, nullable=False)
-    time_created = db.Column(db.DateTime, default=datetime.now())
+    time_created = db.Column(db.DateTime, default=datetime.utcnow)
     time_processed = db.Column(db.DateTime)
     products = db.relationship('ProductsOrder',cascade="all,delete", back_populates='order')
     

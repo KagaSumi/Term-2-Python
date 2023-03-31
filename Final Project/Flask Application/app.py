@@ -235,7 +235,7 @@ def api_process_order(order_id):
             store_product = db.session.get(Product, product.product_name)
             product.quantity = store_product.process(product.quantity)
         order.completed = True
-        order.time_processed = datetime.now()
+        order.time_processed = datetime.utcnow()
         db.session.commit()
     return jsonify(order.to_dict())
 

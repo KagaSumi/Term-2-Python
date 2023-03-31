@@ -7,28 +7,42 @@ from Application.UI.ui_Product_Form import Ui_W_Product_Form
 URL = "http://127.0.0.1:5000/api/"
 
 class Form(qtw.QWidget, Ui_W_Product_Form):
+    """This class is a product form it will handle both updating and creating new products for our application.
+    """    
     finished = qtc.Signal()
-    def __init__(self, Product_Name=None):
+    def __init__(self, product_name:str = None) -> None:
         super().__init__()
         self.setupUi(self)
         self.gb.setTitle("Create Product")
         self.update_bool = False
         self.product_info = None
-        if Product_Name:
-            self.gb.setTitle("Update Product")
-            self.le_1.setText(Product_Name)
-            product_name = self.le_1.text()
-            get_url = URL + "product/" + product_name
-            response = requests.get(get_url, json=product_name)
-            content = json.loads(response.text)
-            self.sb_price.setValue(content['price'])
-            self.sb_quantity.setValue(content['quantity'])
-            self.le_1.setDisabled(True)
-            self.update_bool = True
+        if product_name:
+            self.fetch_product(product_name)
         self.pb_cancel.clicked.connect(self.close)
         self.pb_ok.clicked.connect(self.process_ok)
 
-    def update_request(self):
+    def fetch_product(self, product_name) -> None:
+        """This function is to prefill in the label edits of with product information.
+        Prevents changing to name label as well.
+
+        Args:
+            product_name (str): Name of the product
+        """        
+        
+        self.gb.setTitle("Update Product")
+        self.le_1.setText(product_name)
+        product_name = self.le_1.text()
+        get_url = URL + "product/" + product_name
+        response = requests.get(get_url, json=product_name)
+        content = json.loads(response.text)
+        self.sb_price.setValue(content['price'])
+        self.sb_quantity.setValue(content['quantity'])
+        self.le_1.setDisabled(True)
+        self.update_bool = True
+
+    def update_request(self) -> None:
+        """On Update it will send the request to the api to update the product.
+        """        
         product_name = self.le_1.text()
         new_price = self.sb_price.value()
         new_quantity = self.sb_quantity.value()
@@ -37,7 +51,9 @@ class Form(qtw.QWidget, Ui_W_Product_Form):
         requests.put(url, json=payload)
 
 
-    def create_request(self):
+    def create_request(self) -> None:
+        """On Update it will send the request to the api to create the product.
+        """
         product_name = self.le_1.text().lower()
         quantity = self.sb_quantity.value()
         price = self.sb_price.value()
@@ -47,7 +63,11 @@ class Form(qtw.QWidget, Ui_W_Product_Form):
 
 
     @qtc.Slot()
-    def process_ok(self):
+    def process_ok(self) -> None:
+        """Checks if we are updating or creating and call the request methods for create or update.
+        then emit finished event to notify main application we are done and to update the product table.
+        then closes the form window.
+        """        
         if self.update_bool:
             self.update_request()
         else:

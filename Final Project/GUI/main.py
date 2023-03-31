@@ -11,7 +11,7 @@ URL = "http://127.0.0.1:5000/api/"
 
 class Main(qtw.QMainWindow, Ui_Main):
     """This is defining our main application that will tie all the other ui elements together.
-    It has functions to populate all information and handle the logic for any restrictions for the ui I had.
+    It has functions to populate all information and handle the logic for any restrictions for the UI I had.
     """
     def __init__(self):
         super().__init__()
@@ -25,8 +25,8 @@ class Main(qtw.QMainWindow, Ui_Main):
 
         #Tie function calls to button clicked or clicked functionality
         self.pb_create.clicked.connect(self.process_form)
-        self.pb_update.clicked.connect(lambda: self.process_form(self.selected_product))
-        self.pb_delete.clicked.connect(lambda: self.process_delete_product(self.selected_product))
+        self.pb_update.clicked.connect(self.process_form)
+        self.pb_delete.clicked.connect(self.process_delete_product)
         self.pb_order_create.clicked.connect(self.process_create_order)
         self.cb_out_of_stock.clicked.connect(self.fetch_product_table)
         self.pb_order_delete.clicked.connect(self.process_delete_order)
@@ -41,9 +41,11 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.fetch_product_table()
         self.fetch_order_table()
 
-    def fetch_product_table(self):
+    def fetch_product_table(self) -> None:
         """This function will fetch the list of products from my API
         Then populate the Product Table with the list, and make sure that selection is by row and add function call on selecting a product.
+        
+        Will only populate the product table with quantity = 0 if checkbox out_of_stock is checked.
         """
         response = requests.get(URL + "/product")
         content = json.loads(response.text)
@@ -68,7 +70,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         table.setEditTriggers(qtw.QAbstractItemView.NoEditTriggers)
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
 
-    def product_changed(self,selected):
+    def product_changed(self,selected:qtc.QItemSelection):
         """This function is called when there is a selection change in product table.
         This will change the local vairable to update to the name of product selected.
         If there is a selected product it will update the button states so that user can select
@@ -89,7 +91,7 @@ class Main(qtw.QMainWindow, Ui_Main):
             self.pb_delete.setDisabled(True)
             self.pb_update.setDisabled(True)
 
-    def fetch_order_table(self):
+    def fetch_order_table(self) -> None:
         """Much Like fetch_product_Table this will populate our order table filling it out.
         However it has more filter options that modify the order table by the different sorting features. 
         It will redraw the entire order table to ensure it is completely updated after any changes.
@@ -126,7 +128,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         table.setEditTriggers(qtw.QAbstractItemView.NoEditTriggers)
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
 
-    def order_changed(self,selected):
+    def order_changed(self,selected:qtc.QItemSelection) -> None:
         """This function is called when the order selected has changed.
         This function handles enabling and disabling the buttons on the order section.
         This will also update our stored order id to for our other button to use.
@@ -152,7 +154,7 @@ class Main(qtw.QMainWindow, Ui_Main):
             self.pb_order_process.setDisabled(True)
             self.tv_order_items.setModel(None)
 
-    def fetch_order_product_table(self):
+    def fetch_order_product_table(self) -> None:
         """This will fetch all the products for the selected order.
         """        
         for order in self.order_list:
@@ -169,7 +171,7 @@ class Main(qtw.QMainWindow, Ui_Main):
                 table.setModel(model)
                 table.resizeColumnsToContents()
 
-    def update_order_table(self):
+    def update_order_table(self) -> None:
         """This Function is just a wrapper to update my stored value before I run the update function
         """
         self.order_list = json.loads(requests.get(URL + "/order").text)
@@ -179,7 +181,7 @@ class Main(qtw.QMainWindow, Ui_Main):
 # ----------------- Button Functionality--------------------------
 # ----------------------------------------------------------------
     @qtc.Slot()
-    def process_form(self, product_name = None):
+    def process_form(self) -> None:
         """
         Opens a form for creating or editing a product and connects its finished signal to the fetch_product_table method.
         
@@ -191,15 +193,15 @@ class Main(qtw.QMainWindow, Ui_Main):
         Returns:
             None
         """
-        if product_name:
-            self.product_form = Form(product_name)
+        if self.selected_product:
+            self.product_form = Form(self.selected_product)
         else:
             self.product_form = Form()
         self.product_form.finished.connect(self.fetch_product_table)
         self.product_form.show()
 
     @qtc.Slot()
-    def process_delete_product(self, product_name):
+    def process_delete_product(self) -> None:
         """
         Deletes a product from the database by sending a DELETE request to the API.
         
@@ -209,13 +211,13 @@ class Main(qtw.QMainWindow, Ui_Main):
         Returns:
             None
         """
-        delete_url = URL + "/product/" + product_name
+        delete_url = URL + "/product/" + self.selected_product
         requests.delete(delete_url)
         self.selected_product=None
         self.fetch_product_table()
 
     @qtc.Slot()
-    def process_create_order(self):
+    def process_create_order(self) -> None:
         """
         Opens a new order creation form and connects its finished signal to the update_order_table method.
         
@@ -227,7 +229,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.Order_Create_Form.show()
 
     @qtc.Slot()
-    def process_delete_order(self):
+    def process_delete_order(self) -> None:
         """
     Deletes the selected order from the database by sending a DELETE request to the API.
     Disables the delete, process, and update buttons, updates the order table, and clears the item list.
@@ -244,7 +246,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.tv_order_items.setModel(None)
 
     @qtc.Slot()
-    def process_update_order(self):
+    def process_update_order(self) -> None:
         """
     Opens an order editing form for the selected order and connects its finished signal to the update_order_table method.
     Clears the item list.
@@ -258,7 +260,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.Order_Update_Form.show()
 
     @qtc.Slot()
-    def process_process_order(self):
+    def process_process_order(self) -> None:
         """
     Marks the selected order as processed by sending a PUT request to the API.
     Fetches the product table and updates the order table.
@@ -271,7 +273,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.update_order_table()
 
     @qtc.Slot()
-    def order_no_filter(self):
+    def order_no_filter(self) -> None:
         """
     Resets the order process sort filter to None and updates the order table.
     
@@ -282,7 +284,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.update_order_table()
 
     @qtc.Slot()
-    def order_processed_filter(self):
+    def order_processed_filter(self) -> None:
         """
     Sets the order process sort filter to True (processed orders only) and updates the order table.
     
@@ -293,7 +295,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.update_order_table()
 
     @qtc.Slot()
-    def order_unprocessed_filter(self):
+    def order_unprocessed_filter(self) -> None:
         """
         Sets the order process sort filter to False (unprocessed orders only) and updates the order table.
         

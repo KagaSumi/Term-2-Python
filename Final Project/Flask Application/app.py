@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from flask import Flask, jsonify, render_template, request
 from datetime import datetime
 from database import db
@@ -37,7 +36,7 @@ def api_get_product(name):
 def api_get_product_list():
     """Returns the user all the product.
     Returns:
-        Response : A response of the outcome of the get operation
+        List[Dict*] : A list of products
     """    
     output = []
     for product in Product.query.all():
@@ -65,7 +64,7 @@ def api_delete_product(name):
     db.session.commit()
     return jsonify({"message": "Product deleted."}), 200
 
-    
+
 @app.route("/api/product/<string:name>", methods=["PUT"])
 def api_update_product(name):
     """Updating a product's price and quantity."
@@ -162,7 +161,7 @@ def api_get_order_list():
     """Returns the user all the orders.
     Returns:
         Response : A response of the outcome of the get operation
-    """    
+    """
     output = []
     for order in Order.query.all():
         order_JSON = order.to_dict()
@@ -243,7 +242,7 @@ def api_process_order(order_id):
 def api_update_order(order_id):
     """Updates an order with a new set of products.
         Does not need to validate items in the new products as it is all sourced from api and filtered accordingly to what is already in stock
-        does not need to validate quantity as for the same reason.
+        Does not need to validate quantity as for the same reason.
     Args:
         order_id (int): order id to find
 

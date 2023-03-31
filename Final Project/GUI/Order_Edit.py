@@ -6,6 +6,8 @@ from PySide6 import QtGui as qtg
 from Application.UI.ui_Order_Edit import Ui_Edit_Order_Form
 
 class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
+    """This host all the functions for the functionality of the Edit Order UI element.
+    """    
     finished = qtc.Signal()
     def __init__(self,order_id):
         super().__init__()
@@ -24,7 +26,9 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
         self.output = self.content["products"]
         self.fetch_table()
 
-    def fetch_table(self):
+    def fetch_table(self) -> None:
+        """This function will populate the table view with current state of the products in our order.
+        """        
         content = self.output
         table = self.tv_product
         if content != []:
@@ -46,7 +50,12 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
         else:
             table.setModel(None)
 
-    def cart_changed(self,selected):
+    def cart_changed(self,selected:qtc.QItemSelection) -> None:
+        """This function will run when a new row is selected on the order product view
+
+        Args:
+            selected (qtc.QItemSelection): This is the selected row from the order product view.
+        """
         try:
             row = selected.indexes()[0].row()
             self.selected = self.tv_product.model().index(row, 0).data().lower()
@@ -59,18 +68,30 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
             self.pb_remove.setDisabled(True)
 
     @qtc.Slot()
-    def process_ok(self):
+    def process_ok(self) -> None:
+        """The is sending the request to the server with our new product list.
+        After it will emit a finished signal so that the main application can refresh their order list.
+        """        
         requests.post(self.url, json={"products": self.output})
         self.finished.emit()
         self.close()
 
     @qtc.Slot()
-    def process_remove(self):
+    def process_remove(self) -> None:
+        """The function will remove the selected product from our list.
+        Then refresh table view.
+        """        
         self.output = [product for product in self.output if product["name"] != self.selected]
         self.fetch_table()
 
     @qtc.Slot()
-    def process_update(self, product, quantity):
+    def process_update(self, product:str, quantity:int) -> None:
+        """This will go over the order's product list and change the quantity to match the quantity value.
+
+        Args:
+            product (str): Name of the product
+            quantity (int): Value of the quantity
+        """        
         for cart_product in self.output:
             if cart_product["name"] == product:
                 cart_product["quantity"] = quantity

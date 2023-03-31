@@ -56,6 +56,7 @@ class Order(db.Model):
     def to_dict(self):
         new_dict = {}
         total = 0
+        new_dict['id'] = self.id
         new_dict['customer_name'] = self.name
         new_dict['customer_address'] = self.address
         new_dict["products"] = []

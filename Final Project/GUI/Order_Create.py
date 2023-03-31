@@ -24,7 +24,7 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
             "products": []
         }
         self.fetch_product_table()
-        
+
     def update_cart(self):
         content = self.output["products"]
         table = self.tv_orderproducts
@@ -46,8 +46,8 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
             table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
         else:
             table.setModel(None)
-            
-    
+
+
     def fetch_product_table(self):
         # Goal of this function is to update the product_table in case there are new values.
         # This function should also check if the show out of stock boolean is set and adjust accordingly
@@ -73,7 +73,7 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
         table.resizeColumnsToContents()
         table.setEditTriggers(qtw.QAbstractItemView.NoEditTriggers)
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
-        
+
     def cart_changed(self,selected):
         try:
             row = selected.indexes()[0].row()
@@ -89,13 +89,14 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
         try:
             row = selected.indexes()[0].row()
             self.selected_product = self.tv_product.model().index(row, 0).data().lower()
+            self.sb_quantity.setMaximum(int(self.tv_product.model().index(row, 2).data()))
             self.p_add.setEnabled(True)
             self.pb_remove.setDisabled(True)
         except IndexError:
             self.selected_product = None
             self.p_add.setDisabled(True)
             self.pb_remove.setDisabled(True)
-            
+
     def product_changed_cart(self,selected):
         try:
             row = selected.indexes()[0].row()
@@ -106,12 +107,12 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
             self.selected_cart = None
             self.p_add.setDisabled(True)
             self.pb_remove.setDisabled(True)
-            
-        
+
+
     def raise_alert(self,message):
         self.alert = Alert(message)
         self.alert.show()
-        
+
 
     @qtc.Slot()
     def process_ok(self):

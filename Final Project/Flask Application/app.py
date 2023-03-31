@@ -164,9 +164,9 @@ def api_get_order_list():
         Response : A response of the outcome of the get operation
     """    
     output = []
-    for Order in Order.query.all():
-        Order_Json = Order.to_dict()
-        output.append(Order)
+    for order in Order.query.all():
+        order_JSON = order.to_dict()
+        output.append(order_JSON)
     return output
 
 @app.route('/api/order', methods=['POST'])

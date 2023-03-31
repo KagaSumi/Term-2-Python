@@ -5,6 +5,8 @@ from PySide6 import QtGui as qtg
 
 from Application.UI.ui_Main import Ui_Main
 from Product_Form import Form
+from Order_Create import Order_Create_Form
+from Order_Edit import Order_Edit_Form
 URL = "http://127.0.0.1:5000/api/"
 
 class Main(qtw.QMainWindow, Ui_Main):
@@ -12,20 +14,27 @@ class Main(qtw.QMainWindow, Ui_Main):
         super().__init__()
         self.setupUi(self)
         self.selected_product = None
-        self.selected_order = None
+        self.order_list = json.loads(requests.get(URL + "/order").text)
+        self.selected_order_id = None
+        self.selected_order_products = None
+        self.order_process_sort = None
         self.pb_create.clicked.connect(self.process_form)
         self.pb_update.clicked.connect(lambda: self.process_form(self.selected_product))
-        self.pb_delete.clicked.connect(lambda: self.delete_product(self.selected_product))
+        self.pb_delete.clicked.connect(lambda: self.process_delete_product(self.selected_product))
+        self.pb_order_create.clicked.connect(self.process_create_order)
         self.cb_out_of_stock.clicked.connect(self.fetch_product_table)
+        self.pb_order_delete.clicked.connect(self.process_delete_order)
+        self.pb_order_process.clicked.connect(self.process_process_order)
+        self.pb_order_update.clicked.connect(self.process_update_order)
+        self.rb_order_no_filter.clicked.connect(self.order_no_filter)
+        self.rb_order_unprocessed.clicked.connect(self.order_unprocessed_filter)
+        self.rb_order_processed.clicked.connect(self.order_processed_filter)
         self.fetch_product_table()
+        self.fetch_order_table()
 
-            
+
     def fetch_product_table(self):
-        # Goal of this function is to update the product_table in case there are new values.
-        # This function should also check if the show out of stock boolean is set and adjust accordingly
-        # This shouldn't have any dependencies on any other function to run
-        get_url = URL + "/product"
-        response = requests.get(get_url)
+        response = requests.get(URL + "/product")
         content = json.loads(response.text)
         if self.cb_out_of_stock.isChecked():
             content = [item for item in content if item["quantity"] != 0]
@@ -60,12 +69,70 @@ class Main(qtw.QMainWindow, Ui_Main):
             self.pb_update.setDisabled(True)
 
     def fetch_order_table(self):
-        pass
+        content = self.order_list
+        table = self.tv_order_view
+        if self.order_process_sort == True:
+            content = [order for order in content if order["completed"]]
+        elif self.order_process_sort == False:
+            content = [order for order in content if not order["completed"]]
+        model = qtg.QStandardItemModel()
+        model.setColumnCount(5)
+        model.setHorizontalHeaderLabels(['Order_id', 'Name', 'Address','Time Created', 'Time Processed'])
+        for row_num, row_data in enumerate(content):
+            id = qtg.QStandardItem(str(row_data['id']))
+            name = qtg.QStandardItem(row_data['customer_name'].title())
+            address = qtg.QStandardItem(row_data['customer_address'].title())
+            time_create = qtg.QStandardItem(row_data['time_created'])
+            time_process = qtg.QStandardItem(row_data['time_processed'])
+
+            model.setItem(row_num, 0, id)
+            model.setItem(row_num, 1, name)
+            model.setItem(row_num, 2, address)
+            model.setItem(row_num, 3, time_create)
+            model.setItem(row_num, 4, time_process)
+
+        table.setModel(model)
+        table.selectionModel().selectionChanged.connect(self.order_changed)
+        table.setSelectionBehavior(qtw.QTableView.SelectRows)
+        table.resizeColumnsToContents()
+        table.setEditTriggers(qtw.QAbstractItemView.NoEditTriggers)
+        table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
+
     def order_changed(self,selected):
-        pass
-    
+        try:
+            row = selected.indexes()[0].row()
+            self.selected_order_id = int(self.tv_order_view.model().index(row, 0).data())
+            self.pb_order_delete.setEnabled(True)
+            self.pb_order_update.setEnabled(True)
+            self.pb_order_process.setEnabled(True)
+            self.fetch_order_product_table()
+        except IndexError:
+            self.selected_order_products = None
+            self.selected_order_id = None
+            self.pb_order_delete.setDisabled(True)
+            self.pb_order_update.setDisabled(True)
+            self.pb_order_process.setDisabled(True)
+            self.tv_order_items.setModel(None)
+
     def fetch_order_product_table(self):
-        pass
+        for order in self.order_list:
+            if order["id"] == self.selected_order_id:
+                table = self.tv_order_items
+                model = qtg.QStandardItemModel()
+                model.setColumnCount(2)
+                model.setHorizontalHeaderLabels(['Name','Quantity'])
+                for row_num, row_data in enumerate(order["products"]):
+                    name = qtg.QStandardItem(row_data['name'].title())
+                    quantity = qtg.QStandardItem(str(row_data['quantity']))
+                    model.setItem(row_num, 0, name)
+                    model.setItem(row_num,1, quantity)
+
+                table.setModel(model)
+                table.resizeColumnsToContents()
+            
+    def update_order_table(self):
+        self.order_list = json.loads(requests.get(URL + "/order").text)
+        self.fetch_order_table()
 # ----------------------------------------------------------------
 # ----------------- Button Functionality--------------------------
 # ----------------------------------------------------------------
@@ -79,14 +146,54 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.product_form.show()
 
     @qtc.Slot()
-    def delete_product(self, product):
+    def process_delete_product(self, product):
         delete_url = URL + "/product/" + product
         requests.delete(delete_url)
         self.selected_product=None
-        self. fetch_product_table()
+        self.fetch_product_table()
+
+    @qtc.Slot()
+    def process_create_order(self):
+        self.Order_Create_Form = Order_Create_Form()
+        self.Order_Create_Form.finished.connect(self.update_order_table)
+        self.Order_Create_Form.show()
+
+    @qtc.Slot()
+    def process_delete_order(self):
+        requests.delete(URL + "/order/" + str(self.selected_order_id))
+        self.selected_product=None
+        self.update_order_table()
+        self.tv_order_items.setModel(None)
+
+    @qtc.Slot()
+    def process_update_order(self):
+        self.Order_Update_Form = Order_Edit_Form(self.selected_order_id)
+        self.Order_Update_Form.finished.connect(self.update_order_table)
+        self.Order_Update_Form.show()
+
+    @qtc.Slot()
+    def process_process_order(self):
+        requests.put(URL +'/order/' + str(self.selected_order_id), json={"process": True})
+        self.fetch_product_table()
+        self.update_order_table()
+
+    @qtc.Slot()
+    def order_no_filter(self):
+        self.order_process_sort = None
+        self.update_order_table()
+
+    @qtc.Slot()
+    def order_processed_filter(self):
+        self.order_process_sort = True
+        self.update_order_table()
+    
+    @qtc.Slot()
+    def order_unprocessed_filter(self):
+        self.order_process_sort = False
+        self.update_order_table()
 
 if __name__ == "__main__":
-    app = qtw.QApplication(sys.argv)
+    app = qtw.QApplication()
     main_window = Main()
     main_window.show()
     sys.exit(app.exec())

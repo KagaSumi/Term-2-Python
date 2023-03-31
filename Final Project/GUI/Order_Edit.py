@@ -75,6 +75,7 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
             if cart_product["name"] == product:
                 cart_product["quantity"] = quantity
         self.fetch_table()
+
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     window = Order_Edit_Form(1)

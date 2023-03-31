@@ -13,11 +13,14 @@ class Main(qtw.QMainWindow, Ui_Main):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        #Initalizing variables
         self.selected_product = None
         self.order_list = json.loads(requests.get(URL + "/order").text)
         self.selected_order_id = None
         self.selected_order_products = None
         self.order_process_sort = None
+
+        #Tie function calls to button clicked or clicked functionality
         self.pb_create.clicked.connect(self.process_form)
         self.pb_update.clicked.connect(lambda: self.process_form(self.selected_product))
         self.pb_delete.clicked.connect(lambda: self.process_delete_product(self.selected_product))
@@ -30,10 +33,15 @@ class Main(qtw.QMainWindow, Ui_Main):
         self.rb_order_unprocessed.clicked.connect(self.order_unprocessed_filter)
         self.rb_order_processed.clicked.connect(self.order_processed_filter)
         self.le_order_filter.textChanged.connect(self.update_order_table)
+
+        #Run Fetch Tables to populate on launch
         self.fetch_product_table()
         self.fetch_order_table()
 
     def fetch_product_table(self):
+        """This function will fetch the list of products from my API
+        Then populate the Product Table with the list, and make sure that selection is by row and add function call on selecting a product.
+        """        
         response = requests.get(URL + "/product")
         content = json.loads(response.text)
         if self.cb_out_of_stock.isChecked():
@@ -58,6 +66,16 @@ class Main(qtw.QMainWindow, Ui_Main):
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
 
     def product_changed(self,selected):
+        """This function is called when there is a selection change in product table.
+        This will change the local vairable to update to the name of product selected.
+        If there is a selected product it will update the button states so that user can select
+        Update and Delete
+        
+        Otherwise it will Disable those buttons.
+
+        Args:
+            selected (QItemSelection): This is the row we selected from the table. 
+        """        
         try:
             row = selected.indexes()[0].row()
             self.selected_product = self.tv_product_list.model().index(row, 0).data().lower()
@@ -69,6 +87,10 @@ class Main(qtw.QMainWindow, Ui_Main):
             self.pb_update.setDisabled(True)
 
     def fetch_order_table(self):
+        """Much Like fetch_product_Table this will populate our order table filling it out.
+        However it has more filter options that modify the order table by the different sorting features. 
+        It will redraw the entire order table to ensure it is completely updated after any changes.
+        """
         content = self.order_list
         table = self.tv_order_view
         if self.order_process_sort == True:
@@ -77,10 +99,10 @@ class Main(qtw.QMainWindow, Ui_Main):
             content = sorted([order for order in content if not order["completed"]], key=lambda x: x["time_created"])
         if self.le_order_filter.text():
             content = [order for order in content if self.le_order_filter.text().lower() in order["customer_name"].lower()]
-        
+
         model = qtg.QStandardItemModel()
         model.setColumnCount(5)
-        model.setHorizontalHeaderLabels(['Order_id', 'Name', 'Address','Time Created', 'Time Processed'])
+        model.setHorizontalHeaderLabels(['Order_ID', 'Name', 'Address','Time Created', 'Time Processed'])
         for row_num, row_data in enumerate(content):
             order_id = qtg.QStandardItem(str(row_data['id']))
             name = qtg.QStandardItem(row_data['customer_name'].title())
@@ -102,6 +124,16 @@ class Main(qtw.QMainWindow, Ui_Main):
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
 
     def order_changed(self,selected):
+        """This function is called when the order selected has changed.
+        This function handles enabling and disabling the buttons on the order section.
+        This will also update our stored order id to for our other button to use.
+        
+        If an order is selected it will call the fetch_order_product_table function
+        which populates the adjecent table view with the items in the order selected.
+
+        Args:
+            selected (QItemSelection): Selected row for the order selected
+        """        
         try:
             row = selected.indexes()[0].row()
             self.selected_order_id = int(self.tv_order_view.model().index(row, 0).data())
@@ -118,6 +150,8 @@ class Main(qtw.QMainWindow, Ui_Main):
             self.tv_order_items.setModel(None)
 
     def fetch_order_product_table(self):
+        """This will fetch all the products for the selected order.
+        """        
         for order in self.order_list:
             if order["id"] == self.selected_order_id:
                 table = self.tv_order_items
@@ -133,6 +167,8 @@ class Main(qtw.QMainWindow, Ui_Main):
                 table.resizeColumnsToContents()
 
     def update_order_table(self):
+        """This Function is just a wrapper to update my stored value before I run the update function
+        """
         self.order_list = json.loads(requests.get(URL + "/order").text)
         self.fetch_order_table()
 

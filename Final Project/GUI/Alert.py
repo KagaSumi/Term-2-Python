@@ -1,7 +1,5 @@
 import sys
-from PySide6 import QtCore as qtc
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 
 from Application.UI.ui_Alert import Ui_Alert
 
@@ -16,7 +14,7 @@ class Alert(qtw.QWidget, Ui_Alert):
         self.label.setText(Alert_Message)
         self.pb_ok.clicked.connect(self.close)
 
-    
+
 if __name__ == "__main__":
     app = qtw.QApplication(sys.argv)
     window = Alert('apple')

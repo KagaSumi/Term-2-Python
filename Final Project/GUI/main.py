@@ -10,6 +10,9 @@ from Order_Edit import Order_Edit_Form
 URL = "http://127.0.0.1:5000/api/"
 
 class Main(qtw.QMainWindow, Ui_Main):
+    """This is defining our main application that will tie all the other ui elements together.
+    It has functions to populate all information and handle the logic for any restrictions for the ui I had.
+    """
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -41,7 +44,7 @@ class Main(qtw.QMainWindow, Ui_Main):
     def fetch_product_table(self):
         """This function will fetch the list of products from my API
         Then populate the Product Table with the list, and make sure that selection is by row and add function call on selecting a product.
-        """        
+        """
         response = requests.get(URL + "/product")
         content = json.loads(response.text)
         if self.cb_out_of_stock.isChecked():
@@ -129,11 +132,11 @@ class Main(qtw.QMainWindow, Ui_Main):
         This will also update our stored order id to for our other button to use.
         
         If an order is selected it will call the fetch_order_product_table function
-        which populates the adjecent table view with the items in the order selected.
+        which populates the adjacent table view with the items in the order selected.
 
         Args:
             selected (QItemSelection): Selected row for the order selected
-        """        
+        """
         try:
             row = selected.indexes()[0].row()
             self.selected_order_id = int(self.tv_order_view.model().index(row, 0).data())
@@ -176,29 +179,62 @@ class Main(qtw.QMainWindow, Ui_Main):
 # ----------------- Button Functionality--------------------------
 # ----------------------------------------------------------------
     @qtc.Slot()
-    def process_form(self, passed = None):
-        if passed:
-            self.product_form = Form(passed)
+    def process_form(self, product_name = None):
+        """
+        Opens a form for creating or editing a product and connects its finished signal to the fetch_product_table method.
+        
+        If product_name is None then it is assumed that we are creating a new product
+        If product_name is not None then it is assumed that passed is a name of the product
+        Args:
+            product_name (str or None): The name of the product to edit, or None to create a new product.
+        
+        Returns:
+            None
+        """
+        if product_name:
+            self.product_form = Form(product_name)
         else:
             self.product_form = Form()
         self.product_form.finished.connect(self.fetch_product_table)
         self.product_form.show()
 
     @qtc.Slot()
-    def process_delete_product(self, product):
-        delete_url = URL + "/product/" + product
+    def process_delete_product(self, product_name):
+        """
+        Deletes a product from the database by sending a DELETE request to the API.
+        
+        Args:
+            product_name (str): The name of the product to be deleted.
+        
+        Returns:
+            None
+        """
+        delete_url = URL + "/product/" + product_name
         requests.delete(delete_url)
         self.selected_product=None
         self.fetch_product_table()
 
     @qtc.Slot()
     def process_create_order(self):
+        """
+        Opens a new order creation form and connects its finished signal to the update_order_table method.
+        
+        Returns:
+            None
+        """
         self.Order_Create_Form = Order_Create_Form()
         self.Order_Create_Form.finished.connect(self.update_order_table)
         self.Order_Create_Form.show()
 
     @qtc.Slot()
     def process_delete_order(self):
+        """
+    Deletes the selected order from the database by sending a DELETE request to the API.
+    Disables the delete, process, and update buttons, updates the order table, and clears the item list.
+    
+    Returns:
+        None
+        """
         requests.delete(URL + "/order/" + str(self.selected_order_id))
         self.selected_product=None
         self.pb_order_delete.setDisabled(True)
@@ -209,6 +245,13 @@ class Main(qtw.QMainWindow, Ui_Main):
 
     @qtc.Slot()
     def process_update_order(self):
+        """
+    Opens an order editing form for the selected order and connects its finished signal to the update_order_table method.
+    Clears the item list.
+    
+    Returns:
+        None
+        """
         self.Order_Update_Form = Order_Edit_Form(self.selected_order_id)
         self.Order_Update_Form.finished.connect(self.update_order_table)
         self.tv_order_items.setModel(None)
@@ -216,22 +259,47 @@ class Main(qtw.QMainWindow, Ui_Main):
 
     @qtc.Slot()
     def process_process_order(self):
+        """
+    Marks the selected order as processed by sending a PUT request to the API.
+    Fetches the product table and updates the order table.
+    
+    Returns:
+        None
+        """
         requests.put(URL +'/order/' + str(self.selected_order_id), json={"process": True})
         self.fetch_product_table()
         self.update_order_table()
 
     @qtc.Slot()
     def order_no_filter(self):
+        """
+    Resets the order process sort filter to None and updates the order table.
+    
+    Returns:
+        None
+        """
         self.order_process_sort = None
         self.update_order_table()
 
     @qtc.Slot()
     def order_processed_filter(self):
+        """
+    Sets the order process sort filter to True (processed orders only) and updates the order table.
+    
+    Returns:
+        None
+        """
         self.order_process_sort = True
         self.update_order_table()
-    
+
     @qtc.Slot()
     def order_unprocessed_filter(self):
+        """
+        Sets the order process sort filter to False (unprocessed orders only) and updates the order table.
+        
+        Returns:
+            None
+        """
         self.order_process_sort = False
         self.update_order_table()
 

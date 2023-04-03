@@ -248,12 +248,13 @@ def api_update_order(order_id):
 
     Returns:
         Response: A Json object representing the new order.
-    """    
+    """
     data = request.json
     if ("products") not in data:
         return ("The JSON provided is invalid (missing: process)", 400)
     order = db.session.get(Order, order_id)
     order.completed = False
+    order.time_processed = None
     for product in order.products:
         db.session.delete(product)
     order.products = []

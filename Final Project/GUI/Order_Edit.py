@@ -7,7 +7,7 @@ from Application.UI.ui_Order_Edit import Ui_Edit_Order_Form
 
 class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
     """This host all the functions for the functionality of the Edit Order UI element.
-    """    
+    """
     finished = qtc.Signal()
     def __init__(self,order_id):
         super().__init__()
@@ -28,7 +28,7 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
 
     def fetch_table(self) -> None:
         """This function will populate the table view with current state of the products in our order.
-        """        
+        """
         content = self.output
         table = self.tv_product
         if content != []:
@@ -71,7 +71,7 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
     def process_ok(self) -> None:
         """The is sending the request to the server with our new product list.
         After it will emit a finished signal so that the main application can refresh their order list.
-        """        
+        """
         requests.post(self.url, json={"products": self.output})
         self.finished.emit()
         self.close()
@@ -80,7 +80,7 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
     def process_remove(self) -> None:
         """The function will remove the selected product from our list.
         Then refresh table view.
-        """        
+        """
         self.output = [product for product in self.output if product["name"] != self.selected]
         self.fetch_table()
 
@@ -91,7 +91,7 @@ class Order_Edit_Form(qtw.QWidget, Ui_Edit_Order_Form):
         Args:
             product (str): Name of the product
             quantity (int): Value of the quantity
-        """        
+        """
         for cart_product in self.output:
             if cart_product["name"] == product:
                 cart_product["quantity"] = quantity

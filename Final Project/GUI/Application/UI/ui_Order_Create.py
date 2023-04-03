@@ -23,7 +23,7 @@ class Ui_Create_Order_Form(object):
     def setupUi(self, Create_Order_Form):
         if not Create_Order_Form.objectName():
             Create_Order_Form.setObjectName(u"Create_Order_Form")
-        Create_Order_Form.resize(730, 504)
+        Create_Order_Form.resize(756, 527)
         font = QFont()
         font.setFamilies([u"Comic Sans MS"])
         font.setPointSize(12)

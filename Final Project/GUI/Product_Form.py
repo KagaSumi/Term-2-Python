@@ -7,7 +7,7 @@ URL = "http://127.0.0.1:5000/api/"
 
 class Form(qtw.QWidget, Ui_W_Product_Form):
     """This class is a product form it will handle both updating and creating new products for our application.
-    """    
+    """
     finished = qtc.Signal()
     def __init__(self, product_name:str = None) -> None:
         super().__init__()
@@ -26,8 +26,8 @@ class Form(qtw.QWidget, Ui_W_Product_Form):
 
         Args:
             product_name (str): Name of the product
-        """        
-        
+        """
+
         self.gb.setTitle("Update Product")
         self.le_1.setText(product_name)
         product_name = self.le_1.text()
@@ -56,6 +56,9 @@ class Form(qtw.QWidget, Ui_W_Product_Form):
         product_name = self.le_1.text().lower()
         quantity = self.sb_quantity.value()
         price = self.sb_price.value()
+        content= requests.get(URL + "/product/" + product_name)
+        if content.ok:
+            self.update_request()
         url = URL + "product"
         payload = {"name": product_name, "price": price, "quantity": quantity}
         requests.post(url, json=payload)
@@ -66,7 +69,7 @@ class Form(qtw.QWidget, Ui_W_Product_Form):
         """Checks if we are updating or creating and call the request methods for create or update.
         then emit finished event to notify main application we are done and to update the product table.
         then closes the form window.
-        """        
+        """
         if self.update_bool:
             self.update_request()
         else:

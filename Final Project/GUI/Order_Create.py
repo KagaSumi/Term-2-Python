@@ -31,7 +31,7 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
         """        
         content = self.output["products"]
         table = self.tv_orderproducts
-        if content != []:
+        if content:
             model = qtg.QStandardItemModel()
             model.setColumnCount(2)
             model.setHorizontalHeaderLabels(['Name', 'Quantity'])

@@ -1,0 +1,3 @@
+item,quantity
+gas canister,28
+dehydrated food,40

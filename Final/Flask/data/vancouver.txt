@@ -1,0 +1,7 @@
+item,quantity
+mountain bike,43
+kayak,1
+tent,33
+gas stove,20
+gas canister,15
+sleeping bag,1

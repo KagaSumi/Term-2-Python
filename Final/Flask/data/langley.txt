@@ -1,0 +1,7 @@
+item,quantity
+mountain bike,37
+kayak,40
+tent,44
+gas canister,20
+sleeping bag,8
+dehydrated food,37

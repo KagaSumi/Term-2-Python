@@ -69,7 +69,7 @@ class Main(qtw.QMainWindow, Ui_Main):
         table.setSelectionBehavior(qtw.QTableView.SelectRows)
         table.setEditTriggers(qtw.QAbstractItemView.NoEditTriggers)
         table.setSelectionMode(qtw.QAbstractItemView.SingleSelection)
-        
+
     def update_order(self) -> None:
         """This function much like update_products will update the order table with the order list.
         """

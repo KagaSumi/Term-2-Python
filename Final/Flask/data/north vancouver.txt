@@ -1,0 +1,6 @@
+item,quantity
+tent,34
+gas stove,26
+gas canister,35
+sleeping bag,36
+dehydrated food,8

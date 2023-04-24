@@ -28,7 +28,7 @@ class Order_Create_Form(qtw.QWidget, Ui_Create_Order_Form):
 
     def update_cart(self) -> None:
         """This is the function to update the new order products to display what we have in our order.
-        """        
+        """
         content = self.output["products"]
         table = self.tv_orderproducts
         if content:
